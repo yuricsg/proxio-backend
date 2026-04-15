@@ -39,9 +39,9 @@ export const problemTypeEnum = pgEnum('problem_type', [
 export const tenantsTable = pgTable('tenants', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 100 }).notNull().unique(), // techfix.approva.com
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
   ownerEmail: varchar('owner_email', { length: 255 }).notNull().unique(),
-  whatsappNumber: varchar('whatsapp_number', { length: 20 }), // usado no deep link
+  whatsappNumber: varchar('whatsapp_number', { length: 20 }),
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -85,5 +85,7 @@ export type Tenant = typeof tenantsTable.$inferSelect;
 export type NewTenant = typeof tenantsTable.$inferInsert;
 export type ServiceRequest = typeof serviceRequestsTable.$inferSelect;
 export type NewServiceRequest = typeof serviceRequestsTable.$inferInsert;
+export type RequestPhoto = typeof requestPhotosTable.$inferSelect;
+export type NewRequestPhoto = typeof requestPhotosTable.$inferInsert;
 
 

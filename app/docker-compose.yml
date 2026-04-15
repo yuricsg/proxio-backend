@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    container_name: proxio-api
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://proxio:proxio123@db:5432/proxio_dev
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app          
+      - /app/node_modules   
+    command: bun run --watch src/index.ts
+
+  db:
+    image: postgres:16
+    container_name: proxio-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: proxio
+      POSTGRES_PASSWORD: proxio123
+      POSTGRES_DB: proxio_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proxio -d proxio_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
